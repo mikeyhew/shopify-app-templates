@@ -50,6 +50,7 @@ end
 CODE
 
 after_bundle do
+  run 'bin/spring stop' # sometimes it hangs if you don't do this
   git :init
   git add: '.'
   git commit: '-m initial'
