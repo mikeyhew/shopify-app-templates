@@ -49,8 +49,26 @@ ShopifyApp.configure do |config|
 end
 CODE
 
+def generate_shop_model
+  generate :model, 'shop', 'shopify_domain:string:uniq', 'shopify_token:string', '--no-migration'
+  file "db/migrate/#{Time.now.utc.strftime('%Y%m%d%H%M%S')}_create_shops.rb", <<-CODE
+Sequel.migration do
+change do
+
+  create_table :shops do
+    primary_key :id
+    String :shopify_domain, null: false
+    String :shopify_token, null: false
+  end
+
+end
+end
+CODE
+end
+
 after_bundle do
   run 'bin/spring stop' # sometimes it hangs if you don't do this
+  generate_shop_model
   git :init
   git add: '.'
   git commit: '-m initial'
