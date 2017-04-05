@@ -93,6 +93,7 @@ CODE
   git add: '.'
   git commit: '-m initial'
   puts <<-MESSAGE
+
 Conrats, you created an app! If you didn't see any error messages, then everything worked OK. Otherwise, there could be some problems.
 Here are some things you still need to do:
   - Create a new Shopify app in the partners' dashboard. You need to paste your api key and shared secret into your `.env` file, which was created by this generator.
