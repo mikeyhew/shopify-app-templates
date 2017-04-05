@@ -83,7 +83,6 @@ after_bundle do
   remove_file 'config/initializers/shopify_session_repository.rb'
   remove_file 'config/initializers/shopify_app.rb'
   initializer 'shopify_app.rb', shopify_app_initializer
-  inject_into_file 'config/application.rb', after: "  class Application < Rails::Application\n", "    config.force_ssl"
   file ".env", <<-CODE
 SHOPIFY_API_KEY=
 SHOPIFY_SECRET=
