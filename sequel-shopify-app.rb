@@ -84,10 +84,23 @@ after_bundle do
   remove_file 'config/initializers/shopify_app.rb'
   initializer 'shopify_app.rb', shopify_app_initializer
   file ".env", <<-CODE
-SHOPIFY_API_KEY=
-SHOPIFY_SECRET=
+PORT
+SHOPIFY_API_KEY
+SHOPIFY_SECRET
 CODE
+  append_to_file ".gitignore", "# Ignore .env\n.env\n"
   git :init
   git add: '.'
   git commit: '-m initial'
+  puts <<-MESSAGE
+Conrats, you created an app! If you didn't see any error messages, then everything worked OK. Otherwise, there could be some problems.
+Here are some things you still need to do:
+  - Create a new Shopify app in the partners' dashboard. You need to paste your api key and shared secret into your `.env` file, which was created by this generator.
+  - Set up `puma-dev` for this app. Choose a port number, and run `echo <port_number> > ~/.puma-dev/#{app_name}`, and set `PORT=<port_number>` in `.env`.
+  - Set the OAuth callback for this app to `https://#{app_name}.dev/auth/shopify/callback`.
+  - Add `force_ssl` to your `ApplicationController`, so that you don't end up with problems with `http` and `https` oauth callbacks not matching.
+  - Either run `rails g shopify_app:home_controller` or create your own controller and root url. If you make your own controller, be sure to inherit from `ShopifyApp::AuthenticatedController`.
+
+Other than that, you should be good to go. Happy coding!
+MESSAGE
 end
