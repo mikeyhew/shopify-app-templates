@@ -96,9 +96,11 @@ CODE
 
 Conrats, you created an app! If you didn't see any error messages, then everything worked OK. Otherwise, there could be some problems.
 Here are some things you still need to do:
-  - Create a new Shopify app in the partners' dashboard. You need to paste your api key and shared secret into your `.env` file, which was created by this generator.
+  - Create your postgres database and run migrations with `rake db:create db:migrate`
   - Set up `puma-dev` for this app. Choose a port number, and run `echo <port_number> > ~/.puma-dev/#{app_name}`, and set `PORT=<port_number>` in `.env`.
+  - Create a new Shopify app in the partners' dashboard. You need to paste your api key and shared secret into your `.env` file, which was created by this generator.
   - Set the OAuth callback for this app to `https://#{app_name}.dev/auth/shopify/callback`.
+  - Make sure you enable the Embedded App SDK for this app, otherwise Shopify will 404 when the app redirects to the embedded app
   - Add `force_ssl` to your `ApplicationController`, so that you don't end up with problems with `http` and `https` oauth callbacks not matching.
   - Either run `rails g shopify_app:home_controller` or create your own controller and root url. If you make your own controller, be sure to inherit from `ShopifyApp::AuthenticatedController`.
 
