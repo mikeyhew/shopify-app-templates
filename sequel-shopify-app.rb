@@ -6,7 +6,10 @@ gem 'shopify_api'
 gem 'shopify_api_mixins', git: 'https://github.com/mikeyhew/shopify_api_mixins'
 gem 'shopify_app'
 gem 'shopify_app_mixins', git: 'https://github.com/mikeyhew/shopify_app_mixins'
-gem 'dotenv-rails'
+
+gem_group :development, :test do
+  gem 'dotenv-rails'
+end
 
 initializer "shopify_api.rb", <<-CODE
 ShopifyAPI::Connection.retry_on_429
