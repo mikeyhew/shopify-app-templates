@@ -88,6 +88,9 @@ PORT
 SHOPIFY_API_KEY
 SHOPIFY_SECRET
 CODE
+  file "Procfile", <<-CODE
+  web: bundle exec puma -C config/puma.rb
+CODE
   append_to_file ".gitignore", "# Ignore .env\n.env\n"
   git :init
   git add: '.'
