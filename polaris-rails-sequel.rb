@@ -4,7 +4,8 @@ String.send :define_method, :deindent do
 end
 
 def source_paths
-  ["#{__dir__}/polaris-rails"]
+  ["#{__dir__}/polaris-rails",
+   "#{__dir__}/sequel"]
 end
 
 insert_into_file "Gemfile", "\nruby '#{RUBY_VERSION}'", after: "source 'https://rubygems.org'\n"
@@ -17,7 +18,7 @@ gem 'shopify_api_mixins', github: 'mikeyhew/shopify_api_mixins'
 gem 'activeresource', github: 'rails/activeresource'
 gem 'sequel', '~> 5.1'
 gem 'pg'
-gem 'sequel_pg'
+gem 'sequel_pg', require: false
 gem 'sequel-rails', github: 'Talentbox/sequel-rails'
 
 gem 'pry'
@@ -78,6 +79,8 @@ after_bundle do
     ShopifyAPI::Connection.retry_on_429
     ShopifyAPI::Connection.retry_on_5xx
   CODE
+
+  template 'database.yml.erb', 'config/database.yml'
 
   generate 'shopify_app:install'
   copy_file 'shopify_app_initializer.rb', 'config/initializers/shopify_app.rb', force: true
