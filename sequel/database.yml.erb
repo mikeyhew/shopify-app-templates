@@ -1,0 +1,17 @@
+default: &default
+  adapter: postgresql
+  port: 5432
+  encoding: unicode
+  pool: 5
+
+development:
+  <<: *default
+  url: 'postgres://localhost/<%= app_name %>_development'
+
+test:
+  <<: *default
+  url: 'postgres://localhost/<%= app_name %>_test'
+
+production:
+  <<: *default
+  url: <%%= ENV['DATABASE_URL'] %>
