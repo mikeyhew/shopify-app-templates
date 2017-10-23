@@ -1,3 +1,5 @@
+insert_into_file "Gemfile", "\nruby '#{RUBY_VERSION}'", after: "source 'https://rubygems.org'\n"
+
 gem 'sequel'
 gem 'pg'
 gem 'sequel-rails', git: 'https://github.com/mikeyhew/sequel-rails.git'

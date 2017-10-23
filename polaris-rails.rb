@@ -7,6 +7,8 @@ def source_paths
   ["#{__dir__}/polaris-rails"]
 end
 
+insert_into_file "Gemfile", "\nruby '#{RUBY_VERSION}'", after: "source 'https://rubygems.org'\n"
+
 gem 'webpacker'
 gem 'shopify_app', '~> 8.2'
 gem 'shopify_api', '~> 4.9'
