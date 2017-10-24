@@ -16,11 +16,11 @@
         apiKey: "<%= j ShopifyApp.configuration.api_key %>",
         shopOrigin: "<%= "https://#{ @shop_session.url }" if @shop_session %>",
         debug: <%= Rails.env.development? ? 'true' : 'false' %>,
-      }
+      };
 
       // force redirect to Shopify admin
       if (window.parent === window) {
-        window.location = appConfig.shopOrigin + '/admin/apps/' + appConfig.apiKey + window.location.pathname.replace(/^\/embedded/, '')
+        window.location = appConfig.shopOrigin + '/admin/apps/' + appConfig.apiKey + window.location.pathname.replace(/^\/embedded/, '');
       }
     </script>
     <%= javascript_pack_tag 'application' %>
