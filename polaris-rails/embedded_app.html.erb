@@ -7,10 +7,6 @@
     <link rel="stylesheet" href="https://sdks.shopifycdn.com/polaris/1.2.1/polaris.min.css">
     <%= stylesheet_link_tag 'application' %>
     <%= csrf_meta_tags %>
-    <% if Rails.env.development? %>
-        <!-- connect to react-devtools -->
-        <script src="https://localhost:8097"></script>
-    <% end %>
     <script>
       window.appConfig = {
         apiKey: "<%= j ShopifyApp.configuration.api_key %>",
@@ -23,7 +19,6 @@
         window.location = appConfig.shopOrigin + '/admin/apps/' + appConfig.apiKey + window.location.pathname.replace(/^\/embedded/, '');
       }
     </script>
-    <%= javascript_pack_tag 'application' %>
   </head>
   <body>
     <div class="app-wrapper">
@@ -31,5 +26,11 @@
         <main role="main" id="main"></main>
       </div>
     </div>
+
+    <% if Rails.env.development? %>
+        <!-- connect to react-devtools -->
+        <script src="https://localhost:8097"></script>
+    <% end %>
+    <%= javascript_pack_tag 'application' %>
   </body>
 </html>
