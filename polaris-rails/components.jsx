@@ -1,6 +1,7 @@
 import React from 'react'
-import {Page, Layout, Card} from '@shopify/polaris'
+import {Layout, Card} from '@shopify/polaris'
 import {EmbeddedApp} from '@shopify/polaris/embedded'
+import Page from './Page'
 import {BrowserRouter, Route} from 'react-router-dom'
 
 const {apiKey, shopOrigin, debug} = appConfig

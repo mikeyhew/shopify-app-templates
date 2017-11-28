@@ -99,7 +99,7 @@ after_bundle do
   gsub_file "config/webpacker.yml", "https: false", "https: true"
 
   copy_file "components.jsx", "app/javascript/components.jsx"
-  copy_file "history_monkeypatch.coffee", "app/javascript/history_monkeypatch.coffee"
+  copy_file "Page.jsx", "app/javascript/Page.jsx"
   remove_file "app/javascript/packs/application.js"
   copy_file "application.js", "app/javascript/packs/application.js"
 
