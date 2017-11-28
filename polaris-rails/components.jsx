@@ -16,6 +16,18 @@ const Home = () => (
   </Page>
 )
 
+const NotFound = () => (
+  <Page>
+      <Layout>
+          <Layout.Section>
+              <Card title='Not Found' sectioned>
+                Oops, looks like that page doesn't exist. <Link to="/">Go Home</Link>
+              </Card>
+          </Layout.Section>
+      </Layout>
+  </Page>
+)
+
 const App = () => (
   <EmbeddedApp
     apiKey={apiKey}
@@ -24,7 +36,10 @@ const App = () => (
     debug={debug}
   >
     <BrowserRouter>
-      <Route path="/" component={Home} />
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route component={NotFound} />
+      </Switch>
     </BrowserRouter>
   </EmbeddedApp>
 )
