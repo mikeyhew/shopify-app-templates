@@ -80,9 +80,12 @@ after_bundle do
 
   # add the wildcard first, so it
   # ends up at the bottom
-  route "get '*', to: 'embedded_app#index'"
+  route "get '*wildcard', to: 'embedded_app#index'"
 
   generate 'shopify_app:install'
+
+  route "root 'embedded_app#index'"
+
   copy_file 'shopify_app_initializer.rb', 'config/initializers/shopify_app.rb', force: true
 
   generate_shop_model

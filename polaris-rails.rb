@@ -65,9 +65,12 @@ after_bundle do
 
   # add the wildcard first, so it
   # ends up at the bottom
-  route "get '*', to: 'embedded_app#index'"
+  route "get '*wildcard', to: 'embedded_app#index'"
 
   generate 'shopify_app:install'
+
+  route "root 'embedded_app#index'"
+
   generate 'shopify_app:shop_model'
 
   generate_embedded_app_controller
