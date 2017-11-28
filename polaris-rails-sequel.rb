@@ -44,10 +44,6 @@ def generate_embedded_app_controller
 
   generate :controller, "embedded_app", "index", "--no-assets", "--skip-routes", "--skip"
 
-  route "root to: redirect('embedded', status: 302)"
-  route "get 'embedded', to: 'embedded_app#index'"
-  route "get 'embedded/*other', to: 'embedded_app#index'"
-
   gsub_file "app/controllers/embedded_app_controller.rb", "< ApplicationController", "< ShopifyApp::AuthenticatedController"
 
   # ShopifyApp::AuthenticatedController uses layout "embedded_app", need to get rid of it
@@ -81,6 +77,10 @@ after_bundle do
   CODE
 
   template 'database.yml.erb', 'config/database.yml'
+
+  # add the wildcard first, so it
+  # ends up at the bottom
+  route "get '*', to: 'embedded_app#index'"
 
   generate 'shopify_app:install'
   copy_file 'shopify_app_initializer.rb', 'config/initializers/shopify_app.rb', force: true
@@ -133,7 +133,7 @@ after_bundle do
 
     - create an app in your Shopify Partner's Dashboard, and do the following:
       - enable the Embedded App extension
-      - set the app url to #{app_url}/embedded
+      - set the app url to #{app_url}
       - set the OAuth callback url to #{app_url}/auth/shopify_callback
       - copy the api key and secret, and paste them into .env
 
