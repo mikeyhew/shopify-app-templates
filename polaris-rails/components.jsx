@@ -2,7 +2,7 @@ import React from 'react'
 import {Layout, Card} from '@shopify/polaris'
 import {EmbeddedApp} from '@shopify/polaris/embedded'
 import Page from './Page'
-import {BrowserRouter, Route} from 'react-router-dom'
+import {BrowserRouter, Route, Switch, Link} from 'react-router-dom'
 
 const {apiKey, shopOrigin, debug} = appConfig
 
