@@ -70,6 +70,13 @@ after_bundle do
     web: bundle exec puma -C config/puma.rb
   CODE
 
+  # add Procfile.dev, so we can use foreman start -f Procfile.dev to start both Rails server and webpack-dev-server at once
+  file "Procfile", <<-CODE.deindent
+    web: bundle exec puma -C config/puma.rb
+    webpacker: ./bin/webpack-dev-server
+  CODE
+
+
   # use shopify_api_mixins
   initializer "shopify_api.rb", <<-CODE.deindent
     ShopifyAPI::Connection.retry_on_429
