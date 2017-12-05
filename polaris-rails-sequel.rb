@@ -30,6 +30,9 @@ gem_group :development, :test do
  gem 'pry-rescue'
 end
 
+require 'pg'
+require 'sequel'
+
 def generate_shop_model
   generate :model, 'shop', 'shopify_domain:string:uniq', 'shopify_token:string', '--no-migration'
   copy_file 'shop_model.rb','app/models/shop.rb', force: true
@@ -70,6 +73,13 @@ after_bundle do
     web: bundle exec puma -C config/puma.rb
   CODE
 
+  # add Procfile.dev, so we can use foreman start -f Procfile.dev to start both Rails server and webpack-dev-server at once
+  file "Procfile.dev", <<-CODE.deindent
+    web: bundle exec puma -C config/puma.rb
+    webpacker: ./bin/webpack-dev-server
+  CODE
+
+
   # use shopify_api_mixins
   initializer "shopify_api.rb", <<-CODE.deindent
     ShopifyAPI::Connection.retry_on_429
@@ -77,6 +87,12 @@ after_bundle do
   CODE
 
   template 'database.yml.erb', 'config/database.yml'
+
+  db = Sequel.connect(adapter: 'postgres', host: 'localhost', database: 'postgres', user: 'dlazar')
+  db.execute "DROP DATABASE IF EXISTS #{app_name}_development"
+  db.execute "CREATE DATABASE #{app_name}_development"
+  db.execute "DROP DATABASE IF EXISTS #{app_name}_test"
+  db.execute "CREATE DATABASE #{app_name}_test"
 
   # add the wildcard first, so it
   # ends up at the bottom
