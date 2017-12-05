@@ -88,7 +88,10 @@ after_bundle do
 
   template 'database.yml.erb', 'config/database.yml'
 
-  db = Sequel.connect(adapter: 'postgres', host: 'localhost', database: 'postgres', user: 'dlazar')
+  # Here be dragons
+  # this can work fine assuming your PostgreSQL user postgres gets in w/out a local password, otherwise decorate  this with user: 'username', password: 'pwd'
+  # this can also blow up if old copies are currently attached and open to some other user, say in PgAdmin
+  db = Sequel.connect(adapter: 'postgres', host: 'localhost', database: 'postgres')
   db.execute "DROP DATABASE IF EXISTS #{app_name}_development"
   db.execute "CREATE DATABASE #{app_name}_development"
   db.execute "DROP DATABASE IF EXISTS #{app_name}_test"
@@ -156,8 +159,9 @@ after_bundle do
       - set the OAuth callback url to #{app_url}/auth/shopify_callback
       - copy the api key and secret, and paste them into .env
 
-    - create your database and run migrations with `rake db:create db:migrate`
+    - run migrations with `rake db:create db:migrate`
 
-    Once you've done all that, you can run your app with `rails s` and `bin/webpack-dev-server`
+    Once you've done all that, you can run your app with `rails s` and `bin/webpack-dev-server` or
+    `foreman -s Procfile.dev` to get it done in one shot or with an even shorter alias
   MESSAGE
 end
