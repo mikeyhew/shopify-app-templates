@@ -32,6 +32,12 @@ after_bundle do
     web: bundle exec puma -C config/puma.rb
   CODE
 
+  # add Procfile.dev so we can use stuff like Foreman or Heroku Local
+  file "Procfile.dev", <<~CODE
+    rails: bundle exec rails s
+    webpack: bundle exec bin/webpack-dev-server
+  CODE
+
   # helper method for connecting to Shop in console
   file ".pryrc", <<~CODE
     Shop.send :define_method, :connect do
@@ -122,6 +128,11 @@ after_bundle do
   git commit: '-a -m "run migrations"'
 
   puts <<~MESSAGE
-    Congrats, you have created a new Shopify app. You can run your app with `rails s` and `bin/webpack-dev-server`
+    Congrats, you have created a new Shopify app. To run your app:
+
+    cd #{app_name}
+    heroku local -f Procfile.dev
+
+    then go to #{app_url} in your browser.
   MESSAGE
 end
