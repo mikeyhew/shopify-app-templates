@@ -1,42 +1,19 @@
-String.send :define_method, :deindent do
-  indent = match(/ */)[0]
-  gsub /^ {#{indent.length}}/, ''
-end
+# Usage: rails new -d postgresql --skip-turbolinks --skip-javascript --skip-action-cable -m shopify-app-templates/polaris-rails.rb <app_name>
 
 def source_paths
-  ["#{__dir__}/polaris-rails"]
+  [__dir__]
 end
 
-insert_into_file "Gemfile", "\nruby '#{RUBY_VERSION}'", after: "source 'https://rubygems.org'\n"
+gem 'webpacker', '~> 4.0.0.rc.7'
+gem 'shopify_app'
+gem 'shopify_api'
 
-gem 'webpacker'
-gem 'shopify_app', '~> 8.2'
-gem 'shopify_api', '~> 4.9'
-gem 'shopify_api_mixins', github: 'mikeyhew/shopify_api_mixins'
-gem 'activeresource', github: 'rails/activeresource'
 gem 'pry'
 gem 'pry-rails'
 
 gem_group :development, :test do
  gem 'dotenv-rails'
- gem 'pry-byebug'
- gem 'pry-rescue'
 end
-
-def generate_embedded_app_controller
-  remove_file "app/views/layouts/embedded_app.html.erb"
-  remove_file "app/views/layouts/_flash_messages.html.erb"
-
-  copy_file "embedded_app.html.erb", "app/views/embedded_app/index.html.erb"
-
-  generate :controller, "embedded_app", "index", "--no-assets", "--skip-routes", "--skip"
-
-  gsub_file "app/controllers/embedded_app_controller.rb", "< ApplicationController", "< ShopifyApp::AuthenticatedController"
-
-  # ShopifyApp::AuthenticatedController uses layout "embedded_app", need to get rid of it
-  insert_into_file "app/controllers/embedded_app_controller.rb", "  layout false\n\n", after: "class EmbeddedAppController < ShopifyApp::AuthenticatedController\n"
-end
-
 
 after_bundle do
   # keep spring from hanging during development
@@ -47,84 +24,104 @@ after_bundle do
   git add: "."
   git commit: '-a -m "initial commit with gems"'
 
-  append_to_file "config/application.rb", <<-CODE.deindent.prepend("\n")
-    # force ssl across the whole app (including ShopifyApp stuff), while still letting some controllers override it
-    ActionController::Base.force_ssl
-  CODE
+  # use https everywhere throughout the app
+  application "config.force_ssl = true"
 
   # add Procfile
-  file "Procfile", <<-CODE.deindent
+  file "Procfile", <<~CODE
     web: bundle exec puma -C config/puma.rb
   CODE
 
-  # use shopify_api_mixins
-  initializer "shopify_api.rb", <<-CODE.deindent
-    ShopifyAPI::Connection.retry_on_429
-    ShopifyAPI::Connection.retry_on_5xx
+  # helper method for connecting to Shop in console
+  file ".pryrc", <<~CODE
+    Shop.send :define_method, :connect do
+      session = ShopifyAPI::Session.new(shopify_domain, shopify_token)
+      ShopifyAPI::Base.activate_session(session)
+    end
   CODE
 
-  # add the wildcard first, so it
-  # ends up at the bottom
+  # create a single controller with a single action and view for the single-paged app
+  copy_file "app/views/embedded_app/index.html.erb"
+  generate :controller, "embedded_app", "index", "--no-assets", "--skip-routes", "--skip"
+  gsub_file "app/controllers/embedded_app_controller.rb", "< ApplicationController", "< ShopifyApp::AuthenticatedController"
+  insert_into_file "app/controllers/embedded_app_controller.rb", "  layout false\n\n", after: "class EmbeddedAppController < ShopifyApp::AuthenticatedController\n"
   route "get '*wildcard', to: 'embedded_app#index'"
+  route "root 'embedded_app#index'"
 
   generate 'shopify_app:install'
-
-  route "root 'embedded_app#index'"
+  remove_file "app/views/layouts/embedded_app.html.erb"
+  remove_file "app/views/layouts/_flash_messages.html.erb"
 
   generate 'shopify_app:shop_model'
 
-  generate_embedded_app_controller
+  # copy JS files
+  copy_file "app/javascript/App.tsx"
+  copy_file "app/javascript/redux.ts"
+  copy_file "app/javascript/packs/embedded_app.tsx"
 
-  # set up Webpacker, and add yarn dependencies
+  # set up webpack and loaders for react and typescript
   rails_command "webpacker:install"
+  remove_file "app/javascript/packs/application.js"
   rails_command "webpacker:install:react"
-  # use react v15 until Polaris supports v16
-  run "yarn add react@15 react-dom@15"
-  run "yarn add @shopify/polaris react-router react-router-dom"
+  remove_file "app/javascript/packs/hello_react.jsx"
+  rails_command "webpacker:install:typescript"
+  remove_file "app/javascript/packs/hello_typescript.ts"
+  insert_into_file "config/webpack/environment.js", <<~JS, before: "module.exports = environment"
+    // so that modules in app/javascript don't shadow the ones in node_modules
+    environment.resolvedModules.delete('source')
+  JS
 
+  # install remaining JS dependencies
+  run "yarn add @shopify/polaris redux react-redux @types/react-redux"
+
+  # webpack-dev-server should use https
   gsub_file "config/webpacker.yml", "https: false", "https: true"
 
-  copy_file "components.jsx", "app/javascript/components.jsx"
-  copy_file "Page.jsx", "app/javascript/Page.jsx"
-  remove_file "app/javascript/packs/application.js"
-  copy_file "application.js", "app/javascript/packs/application.js"
+  # create db and run migrations. Drop it first if it already exists (this usually happens when developing the template itself)
+  rails_command "db:drop db:create db:migrate"
+
+  say "Enter you app name and port for puma-dev."
+
+  puma_dev_app = ask("app name for puma-dev:", default: app_name.gsub(/_/, ''))
+
+  port = ask("PORT for puma-dev (e.g. 3005):") until port.present?
+
+  app_url = "https://#{puma_dev_app}.test"
+
+  say <<~MESSAGE
+    Create a new shopify app with the following config
+    - App URL: #{app_url}
+    - Whitelisted Redirection URL: #{app_url}/auth/shopify/callback
+
+    then give me your API Key and Secret Key.
+  MESSAGE
+
+  api_key = ask "API Key:" until api_key.present?
+  secret_key = ask "Secret Key:" until secret_key.present?
+
+  # set up puma-dev app
+  run "echo #{port} > ~/.puma-dev/#{puma_dev_app}"
+
+  file '.env', <<~CONTENTS
+    SHOPIFY_API_KEY=#{api_key}
+    SHOPIFY_SECRET_KEY=#{secret_key}
+    PORT=#{port}
+  CONTENTS
+
+  # ignore .env
+  append_to_file '.gitignore', ".env\n"
 
   # use environment variables for shopify config
-  # this has to be at the end, so other rails commands can run
   gsub_file 'config/initializers/shopify_app.rb', '"<api_key>"', 'ENV.fetch("SHOPIFY_API_KEY")'
-  gsub_file 'config/initializers/shopify_app.rb', '"<secret>"', 'ENV.fetch("SHOPIFY_SECRET")'
-
-  append_to_file '.gitignore', ".env\n"
+  gsub_file 'config/initializers/shopify_app.rb', '"<secret>"', 'ENV.fetch("SHOPIFY_SECRET_KEY")'
 
   git add: "."
   git commit: '-a -m "generate everything else"'
 
-  file '.env', "SHOPIFY_API_KEY\nSHOPIFY_SECRET\n"
+  git add: "."
+  git commit: '-a -m "run migrations"'
 
-  puts "\n\nAlmost done! Enter you app name and port for puma-dev"
-
-  puma_dev_app = app_name.gsub(/_/, '')
-  answer = ask "app name for puma-dev (#{puma_dev_app}):"
-  puma_dev_app = answer if answer.present?
-
-  port = ask("PORT for puma-dev (e.g. 3005):") until port.present?
-
-  run "echo #{port} > ~/.puma-dev/#{puma_dev_app}"
-  append_to_file '.env', "PORT=#{port}\n"
-
-  app_url = "https://#{puma_dev_app}.dev"
-
-  puts <<-MESSAGE.deindent
-    Congrats, you have created a new Polaris app. You still have one more thing to do before it will run, though:
-
-    - create an app in your Shopify Partner's Dashboard, and do the following:
-      - enable the Embedded App extension
-      - set the app url to #{app_url}
-      - set the OAuth callback url to #{app_url}/auth/shopify_callback
-      - copy the api key and secret, and paste them into .env
-
-    - create your database and run migrations with `rake db:create db:migrate`
-
-    Once you've done all that, you can run your app with `rails s` and `bin/webpack-dev-server`
+  puts <<~MESSAGE
+    Congrats, you have created a new Shopify app. You can run your app with `rails s` and `bin/webpack-dev-server`
   MESSAGE
 end
