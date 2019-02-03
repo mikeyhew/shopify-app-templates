@@ -95,6 +95,7 @@ after_bundle do
   app_url = "https://#{puma_dev_app}.test"
 
   say <<~MESSAGE
+
     Create a new shopify app with the following config
     - App URL: #{app_url}
     - Whitelisted Redirection URL: #{app_url}/auth/shopify/callback
@@ -128,6 +129,7 @@ after_bundle do
   git commit: '-a -m "run migrations"'
 
   puts <<~MESSAGE
+
     Congrats, you have created a new Shopify app. To run your app:
 
     cd #{app_name}
