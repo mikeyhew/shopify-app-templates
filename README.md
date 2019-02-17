@@ -25,6 +25,25 @@ You need a few things for this to work properly:
 - if you're having trouble with a puma-dev app, you can see the logs with `tail -f ~/Library/Logs/puma-dev.log`
 - if you change the proxy port of a puma-dev app, it won't realize it until the process restarts. `pkill puma-dev` should work
 
+## react-devtools
+
+There is a branch of react-devtools that works over https/wss.
+
+```bash
+git clone --origin=textioHQ --branch=feature/secure-websockets --single-branch https://github.com/textioHQ/react-devtools
+cd react-devtools
+yarn
+REACT_DEVTOOLS_HOST=react-devtools.test REACT_DEVTOOLS_WS_PORT=443 REACT_DEVTOOLS_WS_PROTOCOL=wss yarn test:standalone
+```
+
+For this to work, you also need to set up a puma-dev app:
+
+```bash
+echo 8097 >~/.puma-dev/react-devtools
+```
+
+The template optionally includes a script tag that loads `https://react-devtools.test`, but only if `Rails.env.development?`, and you have to add `?devtools=1` to the url in the address bar.
+
 # Developing this template
 
 I develop in VS Code because it has an awesome Typescript integration. Make sure you have the TSLint plugin from microsoft, and run `yarn` so that typescript can see your dependencies. You also need to run `npm install -g tslint` for VS Code to be able to lint your files with TSLint.
