@@ -104,7 +104,7 @@ after_bundle do
 
   human_app_name = ask("app name for humans:", default: app_name.humanize)
 
-  puma_dev_app = ask("app name for puma-dev:", default: app_name.gsub(/_/, ''))
+  puma_dev_app = ask("app name for puma-dev:", default: app_name.downcase.gsub(/_/, '-'))
 
   app_host = "#{puma_dev_app}.test"
   app_url = "https://#{app_host}"
