@@ -87,8 +87,8 @@ after_bundle do
   # install remaining JS dependencies
   run "yarn add @shopify/polaris redux react-redux @types/react-redux"
 
-  # webpack-dev-server should use https
-  gsub_file "config/webpacker.yml", "https: false", "https: true"
+  # proxy webpack-dev-server requests through puma-dev, so that browsers trust it
+  gsub_file "config/webpacker.yml", /public: localhost:3035/, 'public: https://webpack.test'
 
   # create db and run migrations. Drop it first if it already exists (this usually happens when developing the template itself)
   rails_command "db:drop db:create db:migrate"
