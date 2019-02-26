@@ -62,8 +62,9 @@ after_bundle do
   generate 'shopify_app:shop_model'
 
   # copy JS files
-  copy_file "app/javascript/App.tsx"
-  copy_file "app/javascript/redux.ts"
+  %w[App.tsx Home.tsx NotFound.tsx Router.tsx].each do |file|
+    copy_file "app/javascript/#{file}"
+  end
   copy_file "app/javascript/packs/embedded_app.tsx"
 
   # set up webpack and loaders for react and typescript
@@ -84,8 +85,17 @@ after_bundle do
   copy_file "tslint.json"
   run "yarn add typescript tslint typescript-tslint-plugin tslint-react"
 
+  deps = %w[
+    mikeyhew/shopify-js-deps
+    @shopify/polaris
+    @shopify/app-bridge
+    @shopify/react-compose
+    react-router-dom
+    @types/react-router-dom
+  ]
+
   # install remaining JS dependencies
-  run "yarn add @shopify/polaris redux react-redux @types/react-redux"
+  run "yarn add #{deps.join(" ")}"
 
   # proxy webpack-dev-server requests through puma-dev, so that browsers trust it
   gsub_file "config/webpacker.yml", /public: localhost:3035/, 'public: https://webpack.test'
