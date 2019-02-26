@@ -102,7 +102,7 @@ after_bundle do
   # create db and run migrations. Drop it first if it already exists (this usually happens when developing the template itself)
   rails_command "db:drop db:create db:migrate"
 
-  say "Enter you app name and port for puma-dev."
+  human_app_name = ask("app name for humans:", default: app_name.humanize)
 
   puma_dev_app = ask("app name for puma-dev:", default: app_name.gsub(/_/, ''))
 
@@ -138,9 +138,11 @@ after_bundle do
   # ignore .env
   append_to_file '.gitignore', "\n# .env contains credentials for development apps.\n.env\n"
 
-  # use environment variables for shopify config
+  # use environment variables for api key and secret key
   gsub_file 'config/initializers/shopify_app.rb', '"<api_key>"', 'ENV.fetch("SHOPIFY_API_KEY")'
   gsub_file 'config/initializers/shopify_app.rb', '"<secret>"', 'ENV.fetch("SHOPIFY_SECRET_KEY")'
+  # set the app name
+  gsub_file 'config/initializers/shopify_app.rb', 'config.application_name = "My Shopify App"', "config.application_name = \"#{human_app_name}\""
 
   git add: "."
   git commit: '-a -m "generate everything else"'
