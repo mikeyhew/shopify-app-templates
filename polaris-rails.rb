@@ -127,7 +127,7 @@ after_bundle do
   CONTENTS
 
   # ignore .env
-  append_to_file '.gitignore', ".env\n"
+  append_to_file '.gitignore', "\n# .env contains credentials for development apps.\n.env\n"
 
   # use environment variables for shopify config
   gsub_file 'config/initializers/shopify_app.rb', '"<api_key>"', 'ENV.fetch("SHOPIFY_API_KEY")'
