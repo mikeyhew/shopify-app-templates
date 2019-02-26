@@ -1,10 +1,16 @@
 {
-  "devDependencies": {
-    "@shopify/polaris": "^3.5.0",
-    "@types/react-redux": "^7.0.1",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
-    "react-redux": "^6.0.0",
-    "redux": "^4.0.1"
+  "dependencies": {
+    "@shopify/app-bridge": "^1.0.7",
+    "@shopify/polaris": "^3.9.0",
+    "@shopify/react-compose": "^0.1.10",
+    "@types/react-router-dom": "^4.3.1",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "react-router-dom": "^4.3.1",
+    "shopify-js-deps": "mikeyhew/shopify-js-deps",
+    "tslint": "^5.12.1",
+    "tslint-react": "^3.6.0",
+    "typescript": "^3.3.3333",
+    "typescript-tslint-plugin": "^0.3.1"
   }
 }
