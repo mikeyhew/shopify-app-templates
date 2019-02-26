@@ -70,8 +70,6 @@ after_bundle do
   # set up webpack and loaders for react and typescript
   rails_command "webpacker:install"
   remove_file "app/javascript/packs/application.js"
-  rails_command "webpacker:install:react"
-  remove_file "app/javascript/packs/hello_react.jsx"
   rails_command "webpacker:install:typescript"
   remove_file "app/javascript/packs/hello_typescript.ts"
   insert_into_file "config/webpack/environment.js", <<~JS, before: "module.exports = environment"
@@ -87,11 +85,12 @@ after_bundle do
 
   deps = %w[
     mikeyhew/shopify-js-deps
+    react @types/react
+    react-dom @types/react-dom
     @shopify/polaris
     @shopify/app-bridge
     @shopify/react-compose
-    react-router-dom
-    @types/react-router-dom
+    react-router-dom @types/react-router-dom
   ]
 
   # install remaining JS dependencies
