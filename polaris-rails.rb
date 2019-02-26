@@ -78,6 +78,12 @@ after_bundle do
     environment.resolvedModules.delete('source')
   JS
 
+  # configure typescript and set up tslint
+  remove_file "tsconfig.json"
+  copy_file "tsconfig.json"
+  copy_file "tslint.json"
+  run "yarn add typescript tslint typescript-tslint-plugin tslint-react"
+
   # install remaining JS dependencies
   run "yarn add @shopify/polaris redux react-redux @types/react-redux"
 
