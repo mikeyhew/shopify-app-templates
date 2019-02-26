@@ -48,6 +48,7 @@ after_bundle do
 
   # create a single controller with a single action and view for the single-paged app
   copy_file "app/views/embedded_app/index.html.erb"
+  copy_file "app/helpers/embedded_app_helper.rb"
   generate :controller, "embedded_app", "index", "--no-assets", "--skip-routes", "--skip"
   gsub_file "app/controllers/embedded_app_controller.rb", "< ApplicationController", "< ShopifyApp::AuthenticatedController"
   insert_into_file "app/controllers/embedded_app_controller.rb", "  layout false\n\n", after: "class EmbeddedAppController < ShopifyApp::AuthenticatedController\n"
