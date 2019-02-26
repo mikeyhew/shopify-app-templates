@@ -97,9 +97,13 @@ after_bundle do
 
   puma_dev_app = ask("app name for puma-dev:", default: app_name.gsub(/_/, ''))
 
-  port = ask("PORT for puma-dev (e.g. 3005):") until port.present?
+  app_host = "#{puma_dev_app}.test"
+  app_url = "https://#{app_host}"
 
-  app_url = "https://#{puma_dev_app}.test"
+  # required in Rails 6: whitelist the puma-dev host so it isn't blocked
+  application "config.hosts = ['#{app_host}']", env: 'development'
+
+  port = ask("PORT for puma-dev (e.g. 3005):") until port.present?
 
   say <<~MESSAGE
 
