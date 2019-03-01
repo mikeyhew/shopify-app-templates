@@ -71,7 +71,7 @@ after_bundle do
   end
   copy_file "app/javascript/packs/embedded_app.tsx"
 
-  # set up webpack and loaders for react and typescript
+  # set up webpacker and loaders for typescript
   rails_command "webpacker:install"
   remove_file "app/javascript/packs/application.js"
   rails_command "webpacker:install:typescript"
