@@ -78,6 +78,7 @@ after_bundle do
   remove_file "app/javascript/packs/hello_typescript.ts"
   insert_into_file "config/webpack/environment.js", <<~JS, before: "module.exports = environment"
     // so that modules in app/javascript don't shadow the ones in node_modules
+    // to use modules in app/javascript, use a relative import, e.g. "./module"
     environment.resolvedModules.delete('source')
   JS
 
