@@ -56,6 +56,8 @@ after_bundle do
   generate :controller, "embedded_app", "index", "--no-assets", "--skip-routes", "--skip"
   gsub_file "app/controllers/embedded_app_controller.rb", "< ApplicationController", "< ShopifyApp::AuthenticatedController"
   insert_into_file "app/controllers/embedded_app_controller.rb", "  layout false\n\n", after: "class EmbeddedAppController < ShopifyApp::AuthenticatedController\n"
+  # note: order is important here. We create the wildcard route _first_,
+  # so that it ends up being _last_ in the file
   route "get '*wildcard', to: 'embedded_app#index'"
   route "root 'embedded_app#index'"
 
