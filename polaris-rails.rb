@@ -1,4 +1,4 @@
-# Usage: rails new -d postgresql --skip-turbolinks --skip-javascript --skip-action-cable -m shopify-app-templates/polaris-rails.rb <app_name>
+# Usage: rails new -d postgresql --skip-turbolinks --skip-javascript --skip-action-cable  --skip-action-mailbox -m shopify-app-templates/polaris-rails.rb <app_name>
 
 if Rails.version.split(".")[0].to_i != 6
   raise "This template only works for Rails 6"
