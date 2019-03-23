@@ -3,7 +3,7 @@
 New Polaris App
 
 ```
-rails new -d postgresql --skip-turbolinks --skip-javascript --skip-action-cable -m shopify-app-templates/polaris-rails.rb <app_name>
+rails new -d postgresql --skip-turbolinks --skip-action-cable --skip-action-mailbox -m shopify-app-templates/polaris-rails.rb <app_name>
 ```
 
 You need a few things for this to work properly:

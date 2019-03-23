@@ -1,4 +1,4 @@
-# Usage: rails new -d postgresql --skip-turbolinks --skip-javascript --skip-action-cable  --skip-action-mailbox -m shopify-app-templates/polaris-rails.rb <app_name>
+# Usage: rails new -d postgresql --skip-turbolinks --skip-action-cable --skip-action-mailbox -m shopify-app-templates/polaris-rails.rb <app_name>
 
 if Rails.version.split(".")[0].to_i != 6
   raise "This template only works for Rails 6"
@@ -8,7 +8,6 @@ def source_paths
   [__dir__]
 end
 
-gem 'webpacker', '~> 4.0.0.rc.7'
 gem 'shopify_app'
 gem 'shopify_api'
 
@@ -73,9 +72,9 @@ after_bundle do
   end
   copy_file "app/javascript/packs/embedded_app.tsx"
 
-  # set up webpacker and loaders for typescript
-  rails_command "webpacker:install"
+  # remove auto-generated application.js - we don't need it
   remove_file "app/javascript/packs/application.js"
+
   rails_command "webpacker:install:typescript"
   remove_file "app/javascript/packs/hello_typescript.ts"
   insert_into_file "config/webpack/environment.js", <<~JS, before: "module.exports = environment"
