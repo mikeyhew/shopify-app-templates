@@ -96,8 +96,10 @@ after_bundle do
     @shopify/polaris
     @shopify/app-bridge
     @shopify/react-compose
-    react-router-dom @types/react-router-dom
   ]
+
+  # until we figure out why react-router >= 5.0 isn't working
+  deps << "react-router-dom@4.3.1 @types/react-router-dom@4.3.1"
 
   # install remaining JS dependencies
   run "yarn add #{deps.join(" ")}"
