@@ -14,6 +14,13 @@
   resolved "https://registry.yarnpkg.com/@shopify/app-bridge/-/app-bridge-1.0.7.tgz#d4a61d2672c496af357c86c321c6fa70e92b0377"
   integrity sha512-/g9PXDvQK3YqzWfyXeQwxVOQaqarZukHWn8EUx0rAj8UjVRBeu2+FoZW8t9TrZAfeUUH2I4l1uWxSgLFdNQQiw==
 
+"@shopify/csrf-token-fetcher@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@shopify/csrf-token-fetcher/-/csrf-token-fetcher-0.0.3.tgz#eb0014139705dd53b9c4fe3ae7686cea1aa9ed9e"
+  integrity sha512-IZ+QGo41CcW6NmIBvyZVOOorOx0P2ypVf+0iE7K0f49448+l2htiacrJVWTRHhdJLhUieG/tZ76yI/Z+pZlw/A==
+  dependencies:
+    tslib "^1.9.3"
+
 "@shopify/images@^1.1.0":
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/@shopify/images/-/images-1.1.5.tgz#f7ae5d5801b4550085480825ceda66420d9ff700"
@@ -272,6 +279,11 @@ csstype@^2.2.0:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.2.tgz#3043d5e065454579afc7478a18de41909c8a2f01"
   integrity sha512-Rl7PvTae0pflc1YtxtKbiSqq20Ts6vpIYOD5WBafl4y123DyHUeLrRdQP66sQW8/6gmX8jrYJLXwNeMqYVJcow==
 
+decode-uri-component@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.0.tgz#eb3913333458775cb84cd1a1fae062106bb87545"
+  integrity sha1-6zkTMzRYd1y4TNGh+uBiEGu4dUU=
+
 diff@^3.2.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-3.5.0.tgz#800c0dd1e0a8bfbc95835c202ad220fe317e5a12"
@@ -298,6 +310,11 @@ esutils@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
   integrity sha1-Cr9PHKpbyx96nYrMbepPqqBLrJs=
+
+fp-ts@^1.0.0, fp-ts@^1.0.1:
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-1.15.0.tgz#7706d6761cc98ccbece91c2ff2e5a5b924f65f3d"
+  integrity sha512-D0gnY9qnpifaqNABqSKjttOW4YVpAHK7I7hcstJllbyqS1GKzbQoAguZYr77DhXzIXnsJiqo65dCHJZq6ouxiQ==
 
 fs.realpath@^1.0.0:
   version "1.0.0"
@@ -376,6 +393,21 @@ invariant@^2.2.1, invariant@^2.2.4:
   dependencies:
     loose-envify "^1.0.0"
 
+io-ts-reporters@^0.0.21:
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/io-ts-reporters/-/io-ts-reporters-0.0.21.tgz#b0be3eec37a3d7da77aeafa257c68bd2afbbc4af"
+  integrity sha512-HRAYn4IVkRbnL9Uy9WDB/1+0lorRZvE239LMdc0ditN8OhsPg+0vKnqchkGhZ/vyTzLC5CZLO4AZ4xreirkIkA==
+  dependencies:
+    fp-ts "^1.0.1"
+    io-ts "^1.0.2"
+
+io-ts@^1.0.2, io-ts@^1.8.3:
+  version "1.8.5"
+  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-1.8.5.tgz#2e102f7f518abe17b0f7e7ede0db54a4c4ddc188"
+  integrity sha512-4HzDeg7mTygFjFIKh7ajBSanoVaFryYSFI0ocdwndSWl3eWQXhg3wVR0WI+Li5Vq11TIsoIngQszVbN4dy//9A==
+  dependencies:
+    fp-ts "^1.0.0"
+
 isarray@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-0.0.1.tgz#8a18acfca9a8f4177e09abfc6038939b05d1eedf"
@@ -406,7 +438,7 @@ lodash-decorators@^4.3.5:
   dependencies:
     tslib "^1.7.1"
 
-lodash@^4.17.4:
+lodash@^4.17.11, lodash@^4.17.4:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
@@ -476,6 +508,15 @@ prop-types@^15.6.1, prop-types@^15.6.2:
   dependencies:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
+
+query-string@^6.4.0:
+  version "6.4.2"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-6.4.2.tgz#8be1dbd105306aebf86022144f575a29d516b713"
+  integrity sha512-DfJqAen17LfLA3rQ+H5S4uXphrF+ANU1lT2ijds4V/Tj4gZxA3gx5/tg1bz7kYCmwna7LyJNCYqO7jNRzo3aLw==
+  dependencies:
+    decode-uri-component "^0.2.0"
+    split-on-first "^1.0.0"
+    strict-uri-encode "^2.0.0"
 
 react-dom@^16.8.3:
   version "16.8.3"
@@ -578,10 +619,11 @@ semver@^5.3.0:
   integrity sha512-RS9R6R35NYgQn++fkDWaOmqGoj4Ek9gGs+DPxNUZKuwE183xjJroKvyo1IzVFeXvUrvmALy6FWD5xrdJT25gMg==
 
 shopify-js-deps@mikeyhew/shopify-js-deps:
-  version "0.1.0"
-  resolved "https://codeload.github.com/mikeyhew/shopify-js-deps/tar.gz/93fde6acc65adf0743021f42c8285a6c7cbd5a3d"
+  version "0.2.0"
+  resolved "https://codeload.github.com/mikeyhew/shopify-js-deps/tar.gz/a662719a91d800f5b7b57b8d796786b11a02fbcd"
   dependencies:
     "@shopify/app-bridge" "^1.0.7"
+    "@shopify/csrf-token-fetcher" "^0.0.3"
     "@shopify/polaris" "^3.9.0"
     "@shopify/react-compose" "^0.1.10"
     "@types/history" "^4.7.2"
@@ -589,14 +631,28 @@ shopify-js-deps@mikeyhew/shopify-js-deps:
     "@types/react-dom" "^16.8.2"
     "@types/react-router" "^4.4.4"
     history "^4.7.2"
+    io-ts "^1.8.3"
+    io-ts-reporters "^0.0.21"
+    lodash "^4.17.11"
+    query-string "^6.4.0"
     react "^16.8.3"
     react-dom "^16.8.3"
     react-router "^4.3.1"
+
+split-on-first@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/split-on-first/-/split-on-first-1.0.0.tgz#648af4ce9a28fbcaadd43274455f298b55025fc6"
+  integrity sha512-mjA57TQtdWztVZ9THAjGNpgbuIrNfsNrGa5IyK94NoPaT4N14M+GI4jD7t4arLjFkYRQWdETC5RxFzLWouoB3A==
 
 sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
+
+strict-uri-encode@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-2.0.0.tgz#b9c7330c7042862f6b142dc274bbcc5866ce3546"
+  integrity sha1-ucczDHBChi9rFC3CdLvMWGbONUY=
 
 strip-ansi@^3.0.0:
   version "3.0.1"

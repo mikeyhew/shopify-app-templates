@@ -10,6 +10,7 @@ end
 
 gem 'shopify_app'
 gem 'shopify_api'
+gem 'shopify_graphql_client', github: 'mikeyhew/shopify_graphql_client'
 
 gem 'pry'
 gem 'pry-rails'
@@ -42,12 +43,12 @@ after_bundle do
   CODE
 
   # helper method for connecting to Shop in console
-  file ".pryrc", <<~CODE
+  file ".pryrc", <<~RUBY
     Shop.send :define_method, :connect do
       session = ShopifyAPI::Session.new(shopify_domain, shopify_token)
       ShopifyAPI::Base.activate_session(session)
     end
-  CODE
+  RUBY
 
   # create a single controller with a single action and view for the single-paged app
   copy_file "app/views/embedded_app/index.html.erb"
@@ -66,11 +67,18 @@ after_bundle do
 
   generate 'shopify_app:shop_model'
 
+  # set up API endpoint
+  copy_file "app/controllers/api/app_info_controller.rb"
+  route <<~RUBY
+    namespace :api do
+      resource :app_info, only: :show, controller: :app_info
+    end
+  RUBY
+
   # copy JS files
-  %w[App.tsx Home.tsx NotFound.tsx Router.tsx].each do |file|
-    copy_file "app/javascript/#{file}"
+  Dir.glob("app/javascript/**/*.{ts,tsx}").each do |file|
+    copy_file file
   end
-  copy_file "app/javascript/packs/embedded_app.tsx"
 
   # remove auto-generated application.js - we don't need it
   remove_file "app/javascript/packs/application.js"
