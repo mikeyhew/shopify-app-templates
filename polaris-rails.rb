@@ -76,9 +76,10 @@ after_bundle do
   RUBY
 
   # copy JS files
-  Dir.glob("app/javascript/**/*.{ts,tsx}").each do |file|
-    copy_file file
+  %w[App.tsx Home.tsx NotFound.tsx Router.tsx declarations.d.ts API.ts].each do |file|
+    copy_file "app/javascript/#{file}"
   end
+  copy_file "app/javascript/packs/embedded_app.tsx"
 
   # remove auto-generated application.js - we don't need it
   remove_file "app/javascript/packs/application.js"
